@@ -20,6 +20,10 @@ Windows環境の方はターミナルとしてGit BashやWSL上のターミナ�
 
 ```bash
 % docker -v
+```
+実行結果の例）
+```bash
+% docker -v
 Docker version 20.10.12, build e91ed5707e
 ```
 
@@ -41,11 +45,15 @@ cloneで指定する値は下記のように取得できます。
 
 git cloneを実行するとカレントディレクトリ上に`docker-mysql-hands-on`ディレクトリが作成されているはずです。  
 
+カレントディレクトリ上で下記を実行して確認する。
+```bash
+% ls
+```
+実行結果の例）
 ```bash
 % ls
 docker-mysql-hands-on
 ```
-
 ディレクトリ内に移動して作業を始めましょう。  
 
 ```bash
@@ -73,11 +81,17 @@ docker-mysql-hands-on
 念の為、下記コマンドでdocker-compose.ymlがあることを確認してください。  
 ```bash
 % ls
+```
+実行結果
+```bash
+% ls
 Dockerfile              conf                    renovate.json
 README.md               docker-compose.yml      sql
 ```
-
 コンテナを起動する。  
+```bash
+% docker compose up -d
+```
 ただし初回は時間がかかります。  
 出力内容も下記より多いです。  
 ```bash
@@ -86,8 +100,10 @@ README.md               docker-compose.yml      sql
  ⠿ Network docker-mysql-hands-on_default  Created                                                                                  0.0s
  ⠿ Container docker-mysql-hands-on        Started
 ```
-
 コンテナを確認します。  
+```bash
+% docker ps
+```
 docker-mysql-hands-onがあればOKです。  
 ```bash
 % docker ps           
@@ -95,23 +111,25 @@ CONTAINER ID   IMAGE                      COMMAND                  CREATED      
 850fd542e459   docker-mysql-hands-on_db   "docker-entrypoint.s…"   45 seconds ago   Up 45 seconds   33060/tcp, 0.0.0.0:3307->3306/tcp   docker-mysql-hands-on
 ```
 
-MySQLにログインします。
-パスワードはdocker-compose.ymlに記載されているとおり「password」です。  
-ただし、ターミナルにパスワードを入力するとき、キーボードを叩いても何も表示されませんが心配せず、入力後にエンターキーを押してください。  
-パスワードの入力内容がまったく表示されないのはターミナルを盗み見されても問題がないようにするためです。  
-
+下記を実行しMySQLにログインします。
+```bash
+% docker compose exec db mysql -uroot -p    
+```
+実行結果
 ```bash
 % docker compose exec db mysql -uroot -p    
 Enter password:
 ```
+パスワードはdocker-compose.ymlに記載されているとおり「password」です。  
+ただし、ターミナルにパスワードを入力するとき、キーボードを叩いても何も表示されませんが心配せず、**入力後にエンターキーを押してください。**  
+パスワードの入力内容がまったく表示されないのはターミナルを盗み見されても問題がないようにするためです。  
+
 ※Git Bashの場合、passwordを入力後に動作しないことがあります。
 Windows環境の方は下記コマンドの入力を試してください。
 ```bash
 $ winpty docker compose exec db mysql -uroot -p    
 Enter password:
 ```
-
-
 
 以下のように表示されればMySQLにログインできています。  
 
@@ -133,10 +151,13 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 
-movie_listがあることを確認する。  
-以下の場合、`show databases;`と打ち込んでください。  
+movie_listがあることを確認する。
+```mysql
+mysql> show databases;
+```
 SQL文においてセミコロンはコマンドの終わりを意味していますので入力忘れがないようにしましょう。  
 
+実行結果
 ```mysql
 mysql> show databases;
 +--------------------+
@@ -151,8 +172,12 @@ mysql> show databases;
 5 rows in set (0.03 sec)
 ```
 
-movie_listの利用を開始する。  
+movie_listの利用を開始する。
+```mysql
+mysql> use databases;
+```
 
+実行結果
 ```mysql
 mysql> use movie_list;
 Reading table information for completion of table and column names
@@ -162,7 +187,10 @@ Database changed
 ```
 
 moviesテーブルがあることを確認する。
-
+```mysql
+mysql> show tables;
+```
+実行結果
 ```mysql
 mysql> show tables;
 +----------------------+
@@ -174,7 +202,10 @@ mysql> show tables;
 ```
 
 moviesテーブルのレコードを確認する。
-
+```mysql
+mysql> select * from movies;
+```
+実行結果
 ```mysql
 mysql> select * from movies;
 +----+--------------------------------+-----------------------------+
@@ -187,14 +218,20 @@ mysql> select * from movies;
 ```
 
 テーブルにレコードを追加してみる。
-
+```mysql
+mysql> insert into movies (name, director) values ("ゴッドファーザー", "フランシス・フォード・コッポラ");
+```
+実行結果
 ```mysql
 mysql> insert into movies (name, director) values ("ゴッドファーザー", "フランシス・フォード・コッポラ");
 Query OK, 1 row affected (0.03 sec)
 ```
 
 レコードの登録結果を確認する。
-
+```mysql
+select * from movies;
+```
+実行結果
 ```mysql
 mysql> select * from movies;
 +----+--------------------------------+-----------------------------------------------+
@@ -210,6 +247,10 @@ mysql> select * from movies;
 ログアウトする。  
 ```mysql
 mysql> exit
+```
+実行結果
+```mysql
+mysql> exit
 Bye
 ```
 
@@ -220,6 +261,10 @@ $ docker compose down
 ```
 
 停止できていることを確認する。  
+```bash
+$ docker ps
+```
+実行結果
 ```bash
 % docker ps
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
